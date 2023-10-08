@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+MULTIARCH=riscv64-linux-gnu
+LIBDIR=/usr/lib/${MULTIARCH}
+LIBGL4ES_GL=/usr/lib/gl4es/libGL.so.1
+GLX_EXTENSION=/usr/share/xorg/glx/extensions
+XORG_EXTENSION=/usr/lib/xorg/modules/extensions
+
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run $0 as root"
+  exit 1
+fi
+
+function usage() {
+  echo "$0 gl4es/mesa"
+  echo "$0 gl4es - use gl4es's libGL as system libGL & enable xorg glx extension"
+  echo "$0 mesa - restore libglvnd & delete xorg glx extension"
+  echo "You must reboot for the changes to take effect."
+}
+
+function update_libGL_mesa() {
+  ldconfig
+  LIBGLSO=`find ${LIBDIR} -maxdepth 1 -type f -name 'libGL.so.*'`
+  if [ "${LIBGLSO}" != "" ]; then
+    rm -rf ${LIBDIR}/libGL.so ${LIBDIR}/libGL.so.1
+    ln -sf ${LIBGLSO} ${LIBDIR}/libGL.so.1
+    ln -sf ${LIBGLSO} ${LIBDIR}/libGL.so
+  fi
+  rm -rf ${XORG_EXTENSION}
+}
+
+function update_libGL_gl4es() {
+  ldconfig
+  LIBGLSO=${LIBGL4ES_GL}
+  rm -rf ${LIBDIR}/libGL.so ${LIBDIR}/libGL.so.1
+  ln -sf ${LIBGLSO} ${LIBDIR}/libGL.so.1
+  ln -sf ${LIBGLSO} ${LIBDIR}/libGL.so
+  rm -rf ${XORG_EXTENSION}
+  ln -sf ${GLX_EXTENSION} ${XORG_EXTENSION}
+}
+
+if [ $# != 1 ]; then
+  usage
+  exit 1
+fi
+
+if [ $1 = "gl4es" ]; then
+  update_libGL_gl4es
+elif [ $1 = "mesa" ]; then
+  update_libGL_mesa
+else
+  usage
+  exit 1
+fi
