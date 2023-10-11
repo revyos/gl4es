@@ -2,8 +2,8 @@ Source: gl4es
 Section: libs
 Priority: optional
 Maintainer: licheng <shiptux@gmail.com>
-Build-Depends: debhelper (>= 11),cmake,libx11-dev
-Standards-Version: 4.1.3
+Build-Depends: debhelper (>= 11), cmake, libx11-dev, dh-exec
+Standards-Version: 4.6.2
 Homepage: https://github.com/ptitSeb/gl4es
 
 Package: libgl4es

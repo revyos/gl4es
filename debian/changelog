@@ -1,3 +1,11 @@
+gl4es (1.1.4+2git3d41822f) unstable; urgency=medium
+
+  * Use git version
+    - commit 3d41822f67cde06b62cf2e4598a86d8aa0390fc0
+  * trans format 3.0 (quilt) to 3.0 (native)
+
+ -- Han Gao <gaohan@iscas.ac.cn>  Sun, 08 Oct 2023 22:20:52 +0800
+
 gl4es (1.1.4-1) unstable; urgency=medium
 
   * Initial release 
